@@ -20,4 +20,9 @@ class Pet extends Model
         'additional_info',
         ''
     ];
+
+    public function adoptions()
+    {
+        return $this->hasMany(Adoptions::class);
+    }
 }
