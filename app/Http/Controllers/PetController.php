@@ -31,9 +31,7 @@ class PetController extends Controller
     public function getAllPets()
     {
         $pets = Pet::all();
-
         $response = ['response' => $pets];
-
         return response()->json($response, 201);
     }
 
@@ -62,7 +60,6 @@ class PetController extends Controller
 
     public function deletePet(Request $request)
     {
-
         $pet = Pet::findOrFail($request->id);
         $pet->delete();
         $status = 200;

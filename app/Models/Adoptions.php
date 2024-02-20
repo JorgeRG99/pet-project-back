@@ -17,4 +17,14 @@ class Adoptions extends Model
         'adoption_date',
         'status',
     ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function pet()
+    {
+        return $this->belongsTo(Pet::class);
+    }
 }

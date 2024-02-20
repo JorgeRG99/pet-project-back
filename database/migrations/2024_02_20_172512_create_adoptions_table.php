@@ -12,15 +12,15 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('adoptions', function (Blueprint $table) {
-            $table->uuid('id');
-            $table->date('adoption_date');
+            $table->uuid('id')->primary();
+            $table->date('adoption_date')->nullable();
             $table->string('status');
 
             $table->uuid('pet_id');
             $table->uuid('user_id');
 
-            $table->foreign('pet_id')->references('id')->on('pets')->onDelete('cascade');
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('pet_id')->references('id')->on('pets');
+            $table->foreign('user_id')->references('id')->on('users');
             $table->timestamps();
         });
     }

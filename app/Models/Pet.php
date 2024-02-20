@@ -22,4 +22,9 @@ class Pet extends Model
         'date_entry',
         'weight'
     ];
+
+    public function adoptions()
+    {
+        return $this->hasMany(Adoptions::class);
+    }
 }

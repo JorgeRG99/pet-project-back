@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\AdoptionsController;
 use App\Http\Controllers\PetController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
@@ -37,6 +38,18 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::patch('/user', [UserController::class, 'updateUser']);
     Route::delete('/user', [UserController::class, 'deleteUser']);
 });
+
+// ------------ ADOPTIONS -------------
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/yourAdoptions', [AdoptionsController::class, 'yourAdoptions']);
+    Route::get('/adoptionsByUser', [AdoptionsController::class, 'getAdoptionsByUser']);
+    Route::get('/adoptionsByPet', [AdoptionsController::class, 'getAdoptionsByPet']);
+    Route::post('/requestAdoption', [AdoptionsController::class, 'requestAdoption']);
+    Route::post('/acceptAdoption', [AdoptionsController::class, 'acceptAdoption']);
+    Route::patch('/confirmAdoption', [AdoptionsController::class, 'confirmAdoption']);
+    Route::delete('/cancelAdoption', [AdoptionsController::class, 'cancelAdoption']);
+});
+
 
 
 // ------------ PET -------------

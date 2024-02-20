@@ -40,4 +40,9 @@ class User extends Authenticatable
     protected $casts = [
         'password' => 'hashed',
     ];
+
+    public function adoptions()
+    {
+        return $this->hasMany(Adoptions::class);
+    }
 }
