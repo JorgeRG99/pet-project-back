@@ -38,7 +38,11 @@ Route::middleware('auth:sanctum')->group(function () {
 });
 
 
+// ------------ PET -------------
 
+Route::middleware('auth:sanctum')->group(function () {
+    
+});
 
 
 
@@ -59,8 +63,4 @@ Route::middleware('auth:sanctum')->group(function () {
 // ------------ ADOPTERS -------------
 
 
-// ------------ PET -------------
 
-Route::middleware('auth:sanctum')->group(function () {
-    
-});
