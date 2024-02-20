@@ -27,6 +27,25 @@ class AdminController extends Controller
         ], 200);
     }
 
+    public function createAdmin(Request $request)
+    {
+        AdminValidation::validateAdminRequest($request);
+
+        $response = Admin::create([
+            'email' => $request->email,
+            'password' => $request->password
+        ]);
+        if ($response) {
+            return response()->json([
+                'response' => 'Admin created Successfully',
+            ], 401);
+        }else{
+            return response()->json([
+                'response' => 'Admin not created',
+            ], 200);
+        }
+    }
+
     public function logOutAdmin(Request $request)
     {
         $request->user()->currentAccessToken()->delete();

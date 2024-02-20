@@ -19,12 +19,14 @@ use Illuminate\Support\Facades\Route;
 // ----------- AUTHENTICATION -----------
 Route::post('/login', [UserController::class, 'login']);
 Route::post('/register', [UserController::class, 'createUser']);
+
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [UserController::class, 'logout']);
 });
 
 // ------------ ADMIN -------------
 Route::post('/loginAdmin', [AdminController::class, 'loginAdmin']);
+Route::post('/createAdmin', [AdminController::class, 'createAdmin']);
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logOutAdmin', [AdminController::class, 'logOutAdmin']);
 });
