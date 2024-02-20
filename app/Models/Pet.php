@@ -18,6 +18,8 @@ class Pet extends Model
         'age',
         'gender',
         'additional_info',
-        ''
+        'active',
+        'date_entry',
+        'weight'
     ];
 }
