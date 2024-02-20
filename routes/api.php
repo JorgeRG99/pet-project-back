@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\PetController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -39,10 +40,13 @@ Route::middleware('auth:sanctum')->group(function () {
 
 
 // ------------ PET -------------
+Route::get('/pets', [PetController::class, 'getAllPets']);
+Route::post('/pet', [PetController::class, 'createPet']);
+Route::get('/pet/{id}', [PetController::class, 'getPet']);
+Route::patch('/pet/{id}', [PetController::class, 'updatePet']);
+Route::delete('/pet/{id}', [PetController::class, 'deletePet']);
 
-Route::middleware('auth:sanctum')->group(function () {
-    
-});
+
 
 
 
@@ -61,6 +65,3 @@ Route::middleware('auth:sanctum')->group(function () {
 
 
 // ------------ ADOPTERS -------------
-
-
-
