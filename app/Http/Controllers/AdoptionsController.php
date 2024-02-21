@@ -84,7 +84,7 @@ class AdoptionsController extends Controller
 
         $adoption->update([
             'status_id' => $cancelledStatus->id,
-            'adoption_date' => date(Carbon::now()->toDateString())
+            'cancellation_date' => date(Carbon::now()->toDateString())
         ]);
 
         return response()->json(['response' => 'Adoption cancelled successfully'], 201);
