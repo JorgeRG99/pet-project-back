@@ -20,14 +20,14 @@ class AdoptionsController extends Controller
 
     public function getAdoptionsByUser(Request $request)
     {
-        $user = User::findOrFail($request->user);
+        $user = User::findOrFail($request->id);
 
         return response()->json(['response' => $user->adoptions()->get()], 200);
     }
 
     public function getAdoptionsByPet(Request $request)
     {
-        $pet = Pet::findOrFail($request->pet);
+        $pet = Pet::findOrFail($request->id);
 
         return response()->json(['response' => $pet->adoptions()->get()], 200);
     }
@@ -37,7 +37,7 @@ class AdoptionsController extends Controller
         $data = json_decode($request->getContent());
 
         Adoptions::create([
-            'user_id' => $data->user_id,
+            'user_id' => Auth::id(),
             'pet_id' => $data->pet_id,
             'status' => 'pending'
         ]);
@@ -47,7 +47,7 @@ class AdoptionsController extends Controller
 
     public function acceptAdoption(Request $request)
     {
-        $adoption = Adoptions::findOrFail($request->adoption_id);
+        $adoption = Adoptions::findOrFail($request->id);
 
         $adoption->update([
             'status' => 'accepted'
@@ -58,7 +58,7 @@ class AdoptionsController extends Controller
 
     public function confirmAdoption(Request $request)
     {
-        $adoption = Adoptions::findOrFail($request->adoption_id);
+        $adoption = Adoptions::findOrFail($request->id);
 
         $adoption->update([
             'status' => 'confirmed'
@@ -69,7 +69,7 @@ class AdoptionsController extends Controller
 
     public function cancelAdoption(Request $request)
     {
-        $adoption = Adoptions::findOrFail($request->adoption_id);
+        $adoption = Adoptions::findOrFail($request->id);
 
         $adoption->update([
             'status' => 'cancelled'

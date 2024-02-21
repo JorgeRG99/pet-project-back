@@ -37,22 +37,24 @@ class PetController extends Controller
 
     public function updatePet(Request $request)
     {
-        $data = json_decode($request->getContent());
+        $data = json_decode($request->getContent(), true);
 
-        $pet = Pet::findOrFail($data->id);
+        $pet = Pet::findOrFail($request->id);
         foreach ($data as $key => $value) {
             $pet->{$key} = $value;
         }
-        PetValidation::validatePetObject($request);
+
+        PetValidation::validatePetObject($pet);
         $pet->update();
         $status = 200;
+
         $response = ['response' => 'Pet updated successfully!'];
         return response()->json($response, $status);
     }
 
     public function getPet(Request $request)
     {
-        $pet = Pet::findOrFail($request->id)->get();
+        $pet = Pet::findOrFail($request->id);
         $status = 200;
         $response = ['response' => $pet];
         return response()->json($response, $status);
@@ -61,7 +63,9 @@ class PetController extends Controller
     public function deletePet(Request $request)
     {
         $pet = Pet::findOrFail($request->id);
-        $pet->delete();
+        $pet['active'] = false;
+        PetValidation::validatePetObject($pet);
+        $pet->update();
         $status = 200;
         $response = ['response' => 'Pet deleted successfully!'];
         return response()->json($response, $status);

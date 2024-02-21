@@ -6,28 +6,26 @@ use Illuminate\Support\Facades\Validator;
 
 class PetValidation
 {
-
     const RULES = [
-        'name' => 'required',
-        'species' => 'required',
-        'age' => 'required',
-        'breed' => 'required',
-        'gender' => 'required',
-        'additional_info' => 'required',
-        'date_entry' => 'required',
-        'weight' => 'required'
+        'name' => 'required|string|max:191',
+        'species' => 'required|string|max:191',
+        'breed' => 'required|string|max:191',
+        'age' => 'required|integer',
+        'gender' => 'required|string|max:191',
+        'additional_info' => 'nullable|string|max:191',
+        'active' => 'sometimes|required|boolean',
+        'date_entry' => 'required|date',
+        'weight' => 'nullable|string|max:191',
     ];
-
-
 
     public static function validatePetRequest($request)
     {
-        $request->validate(array_merge(self::RULES));
+        $request->validate(self::RULES);
     }
 
-    public static function validatePetObject($user)
+    public static function validatePetObject($pet)
     {
-        $validator = Validator::make($user->toArray(), self::RULES);
+        $validator = Validator::make($pet->toArray(), self::RULES);
 
         if ($validator->fails()) {
             throw new \Illuminate\Validation\ValidationException($validator);

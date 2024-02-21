@@ -21,6 +21,7 @@ return new class extends Migration
             $table->string('phone', 9);
             $table->boolean('status')->default(true);
             $table->date('birth_date');
+            $table->enum('role', [ 'worker', 'user' ])->default('user');
             $table->timestamps();
         });
     }
