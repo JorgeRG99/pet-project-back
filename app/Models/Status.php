@@ -20,4 +20,9 @@ class Status extends Model
     {
         return $this->hasMany(Adoptions::class);
     }
+
+    public function visits()
+    {
+        return $this->hasMany(Visits::class);
+    }
 }

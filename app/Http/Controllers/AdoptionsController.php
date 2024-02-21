@@ -32,7 +32,7 @@ class AdoptionsController extends Controller
     public function getAdoptionsByPet(Request $request)
     {
         $pet = Pet::findOrFail($request->id);
-        $adoptions = $pet->adoptions()->with('status')->get();;
+        $adoptions = $pet->adoptions()->with('status')->get();
 
         return response()->json(['response' => $adoptions], 200);
     }
