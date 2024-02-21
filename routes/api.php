@@ -1,10 +1,10 @@
 <?php
 
-use App\Http\Controllers\AdminController;
 use App\Http\Controllers\PetController;
 use App\Http\Controllers\AdoptionsController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\VisitsController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -21,14 +21,13 @@ use Illuminate\Support\Facades\Route;
 // ----------- AUTHENTICATION -----------
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/register', [UserController::class, 'createUser']);
-
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
 });
-
 Route::middleware(['auth:sanctum', 'restrictRole:worker'])->group(function () {
     Route::post('/createWorker', [AuthController::class, 'createWorker']);
 });
+
 
 // ------------ USER -------------
 Route::middleware('auth:sanctum')->group(function () {
@@ -37,12 +36,12 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('/user', [UserController::class, 'deleteUser']);
 });
 
+
 // ------------ ADOPTIONS -------------
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/yourAdoptions', [AdoptionsController::class, 'yourAdoptions']);
     Route::post('/requestAdoption', [AdoptionsController::class, 'requestAdoption']);
 });
-
 Route::middleware(['auth:sanctum', 'restrictRole:worker'])->group(function () {
     Route::get('/adoptionsByUser/{id}', [AdoptionsController::class, 'getAdoptionsByUser']);
     Route::get('/adoptionsByPet/{id}', [AdoptionsController::class, 'getAdoptionsByPet']);
@@ -62,22 +61,15 @@ Route::middleware('auth:sanctum', 'restrictRole:worker')->group(function () {
 });
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// ------------ ADOPTERS -------------
+// ------------ VISITS -------------
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/yourVisits', [VisitsController::class, 'yourVisits']);
+    Route::delete('/cancelVisit', [VisitsController::class, 'cancelVisit']);
+    Route::patch('/updateVisitDate', [VisitsController::class, 'updateVisitDate']);
+});
+Route::middleware('auth:sanctum', 'restrictRole:worker')->group(function () {
+    Route::get('/allVisits', [VisitsController::class, 'allVisits']);
+    Route::get('/visitsWithUser', [VisitsController::class, 'visitsWithUser']);
+    Route::post('/scheduleVisit', [VisitsController::class, 'scheduleVisit']);
+    Route::patch('/visitFinished', [VisitsController::class, 'visitFinished']);
+});

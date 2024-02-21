@@ -32,7 +32,7 @@ class AdoptionsController extends Controller
     public function getAdoptionsByPet(Request $request)
     {
         $pet = Pet::findOrFail($request->id);
-        $adoptions = $pet->adoptions()->with('status')->get();;
+        $adoptions = $pet->adoptions()->with('status')->get();
 
         return response()->json(['response' => $adoptions], 200);
     }
@@ -84,7 +84,7 @@ class AdoptionsController extends Controller
 
         $adoption->update([
             'status_id' => $cancelledStatus->id,
-            'adoption_date' => date(Carbon::now()->toDateString())
+            'cancellation_date' => date(Carbon::now()->toDateString())
         ]);
 
         return response()->json(['response' => 'Adoption cancelled successfully'], 201);
