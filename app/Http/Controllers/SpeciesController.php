@@ -11,32 +11,24 @@ class SpeciesController extends Controller
     public function createSpecie(Request $request)
     {
         SpecieValidation::validateSpecieRequest($request);
-        $data = json_decode($request->getContent());
 
-        Species::create([
+        $specie = Species::create([
             'specie' => $request->specie,
         ]);
 
-        $response = ['response' => 'Specie created successfully!'];
-
-        return response()->json($response, 201);
+        return response()->json(['response' => ['message' => 'Specie created successfully!', 'specie' => $specie]], 201);
     }
 
     public function getAllSpecies()
     {
         $species = Species::all();
-
-        $response = ['response' => $species];
-
-        return response()->json($response, 201);
+        return response()->json(['response' => $species], 201);
     }
 
     public function deleteSpecie(Request $request)
     {
         $specie = Species::findOrFail($request->id);
         $specie->update(['active' => false]);
-        $status = 200;
-        $response = ['response' => 'Specie deleted successfully!'];
-        return response()->json($response, $status);
+        return response()->json(['response' => 'Specie deleted successfully!'], 200);
     }
 }

@@ -12,18 +12,9 @@ class PetController extends Controller
     public function createPet(Request $request)
     {
         PetValidation::validatePetRequest($request);
-        $data = json_decode($request->getContent());
+        $data = json_decode($request->getContent(), true);
 
-       $pet = Pet::create([
-            'name' => $request->name,
-            'specie_id' => $request->species,
-            'age' => $request->age,
-            'breed' => $request->breed,
-            'gender' => $request->gender,
-            'additional_info' => $request->additional_info,
-            'date_entry' => $request->date_entry,
-            'weight' => $request->weight
-        ]);
+       $pet = Pet::create($data);
 
         $response = ['response' => 'Pet created successfully!', 'pet' => $pet];
 
@@ -32,8 +23,7 @@ class PetController extends Controller
     public function getAllPets()
     {
         $pets = Pet::all();
-        $response = ['response' => $pets];
-        return response()->json($response, 201);
+        return response()->json(['response' => $pets], 201);
     }
 
     public function updatePet(Request $request)
@@ -47,18 +37,13 @@ class PetController extends Controller
 
         PetValidation::validatePetObject($pet);
         $pet->update();
-        $status = 200;
 
-        $response = ['response' => 'Pet updated successfully!'];
-        return response()->json($response, $status);
+        return response()->json(['response' => 'Pet updated successfully!'], 200);
     }
 
     public function getPet(Request $request)
     {
-        $pet = Pet::findOrFail($request->id);
-        $status = 200;
-        $response = ['response' => $pet];
-        return response()->json($response, $status);
+        return response()->json(['response' => Pet::findOrFail($request->id)], 200);
     }
 
 
@@ -69,9 +54,7 @@ class PetController extends Controller
         $pet['active'] = false;
         PetValidation::validatePetObject($pet);
         $pet->update();
-        $status = 200;
-        $response = ['response' => 'Pet deleted successfully!'];
-        return response()->json($response, $status);
+        return response()->json(['response' => 'Pet deleted successfully!'], 200);
     }
 
 
@@ -79,8 +62,6 @@ class PetController extends Controller
     {
         $species = Species::findOrFail($request->id);
         $pets = $species->pets()->get();
-        $status = 200;
-        $response = ['response' => $pets];
-        return response()->json($response, $status);
+        return response()->json(['response' => $pets], 200);
     }
 }

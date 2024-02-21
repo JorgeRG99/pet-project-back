@@ -17,26 +17,18 @@ class BreedController extends Controller
             'specie_id' => $request->specie_id
         ]);
 
-        $response = ['response' => 'Breed created successfully!', 'breed' => $breed];
-
-        return response()->json($response, 201);
+        return response()->json(['response' => ['message' => 'Breed created successfully!', 'result' => $breed]], 201);
     }
 
     public function getAllBreeds()
     {
-        $breeds = Breed::all();
-
-        $response = ['response' => $breeds];
-
-        return response()->json($response, 201);
+        return response()->json(['response' => ['result' => Breed::all()]], 201);
     }
 
     public function deleteBreed(Request $request)
     {
         $breed = Breed::findOrFail($request->id);
         $breed->update(['active' => false]);
-        $status = 200;
-        $response = ['response' => 'Breed deleted successfully!'];
-        return response()->json($response, $status);
+        return response()->json(['response' => ['message' => 'Breed deleted successfully!']], 200);
     }
 }

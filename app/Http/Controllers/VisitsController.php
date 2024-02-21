@@ -17,20 +17,20 @@ class VisitsController extends Controller
             ->with('status')
             ->get();
 
-        return response()->json(['response' => $visits], 200);
+        return response()->json(['response' => ['result' => $visits]], 200);
     }
 
     public function allVisits()
     {
         $visits = Visits::all()->load('status');
-        return response()->json(['response' => $visits], 200);
+        return response()->json(['response' => ['result' => $visits]], 200);
     }
 
     public function visitsWithUser()
     {
 
         $visits = Visits::where('user_id', Auth::id())->get();
-        return response()->json(['response' => $visits], 200);
+        return response()->json(['response' => ['result' => $visits]], 200);
     }
 
     public function scheduleVisit(Request $request)
@@ -52,7 +52,7 @@ class VisitsController extends Controller
     {
         $data = json_decode($request->getContent());
         $visit = Visits::findOrFail($data->visit_id);
-        
+
         $confirmedStatus = Status::where('name', 'confirmed')->first();
 
         $visit->update([

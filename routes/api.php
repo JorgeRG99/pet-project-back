@@ -6,7 +6,6 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BreedController;
 use App\Http\Controllers\SpeciesController;
 use App\Http\Controllers\UserController;
-use App\Models\Species;
 use App\Http\Controllers\VisitsController;
 use Illuminate\Support\Facades\Route;
 
@@ -23,7 +22,7 @@ use Illuminate\Support\Facades\Route;
 
 // ----------- AUTHENTICATION -----------
 Route::post('/login', [AuthController::class, 'login']);
-Route::post('/register', [UserController::class, 'createUser']);
+Route::post('/register', [AuthController::class, 'createUser']);
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
 });

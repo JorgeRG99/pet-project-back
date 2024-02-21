@@ -24,7 +24,7 @@ class AdminSeeder extends Seeder
                 "phone" => "666666666",
                 "dni" => "31882383W",
                 'email' => 'admin@admin.com',
-                'password' => Hash::make('12345678'),
+                'password' => '12345678',
                 'role' => 'worker'
             ]
         );

@@ -60,19 +60,37 @@ class AuthController extends Controller
         UserValidation::validateUserRequest($request);
         $data = json_decode($request->getContent());
 
-        User::create([
+        $worker = User::create([
             'name' => $data->name,
             'last_name' => $data->last_name,
             'email' => $data->email,
-            'password' => Hash::make($data->password),
+            'password' => $data->password,
             'birth_date' => $data->birth_date,
             'phone' => $data->phone,
             'dni' => $data->dni,
             'role' => 'worker'
         ]);
 
-        $response = ['response' => 'Worker created successfully!'];
+        $token = $worker->createToken('AuthToken', ['role' => 'worker']);
+        return response()->json(['response' => ['message' => 'Worker created successfully!', 'token' => $token->plainTextToken]], 201);
+    }
 
-        return response()->json($response, 201);
+    public function createUser(Request $request)
+    {
+        UserValidation::validateUserRequest($request);
+        $data = json_decode($request->getContent());
+
+        $user = User::create([
+            'name' => $data->name,
+            'last_name' => $data->last_name,
+            'email' => $data->email,
+            'password' => $data->password,
+            'birth_date' => $data->birth_date,
+            'phone' => $data->phone,
+            'dni' => $data->dni
+        ]);
+
+        $token = $user->createToken('AuthToken', ['role' => 'user']);
+        return response()->json(['response' => ['message' => 'User created successfully!', 'token' => $token->plainTextToken]], 201);
     }
 }

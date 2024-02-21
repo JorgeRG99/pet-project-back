@@ -16,40 +16,31 @@ class AdoptionsController extends Controller
     public function yourAdoptions()
     {
         $user = User::findOrFail(Auth::id());
-        $adoptions = $user->adoptions()->with('status')->get();;
-
-        return response()->json(['response' => $adoptions], 200);
+        return response()->json(['response' => ['result' => $user->adoptions()->with('status')->get()]], 200);
     }
 
     public function getAdoptionsByUser(Request $request)
     {
         $user = User::findOrFail($request->id);
-        $adoptions = $user->adoptions()->with('status')->get();;
-
-        return response()->json(['response' => $adoptions], 200);
+        return response()->json(['response' => ['result' => $user->adoptions()->with('status')->get()]], 200);
     }
 
     public function getAdoptionsByPet(Request $request)
     {
         $pet = Pet::findOrFail($request->id);
-        $adoptions = $pet->adoptions()->with('status')->get();
-
-        return response()->json(['response' => $adoptions], 200);
+        return response()->json(['response' => ['result' => $pet->adoptions()->with('status')->get()]], 200);
     }
 
     public function requestAdoption(Request $request)
     {
         $data = json_decode($request->getContent());
-
         $pendingStatus = Status::where('name', 'pending')->first();
-
-        Adoptions::create([
+        $adoption = Adoptions::create([
             'user_id' => Auth::id(),
             'pet_id' => $data->pet_id,
             'status_id' => $pendingStatus->id
         ]);
-
-        return response()->json(['response' => 'Adoption requested successfully'], 201);
+        return response()->json(['response' => ['message' => 'Adoption requested successfully', 'result' => $adoption]], 201);
     }
 
     public function acceptAdoption(Request $request)
@@ -61,7 +52,7 @@ class AdoptionsController extends Controller
             'status_id' => $acceptedStatus->id
         ]);
 
-        return response()->json(['response' => 'Adoption accepted successfully'], 201);
+        return response()->json(['response' => ['message' => 'Adoption accepted successfully', 'result' => $adoption]], 201);
     }
 
     public function confirmAdoption(Request $request)
@@ -74,7 +65,7 @@ class AdoptionsController extends Controller
             'adoption_date' => date(Carbon::now()->toDateString())
         ]);
 
-        return response()->json(['response' => 'Adoption confirmed successfully'], 201);
+        return response()->json(['response' => ['message' => 'Adoption confirmed successfully', 'result' => $adoption]], 201);
     }
 
     public function cancelAdoption(Request $request)
@@ -87,6 +78,6 @@ class AdoptionsController extends Controller
             'cancellation_date' => date(Carbon::now()->toDateString())
         ]);
 
-        return response()->json(['response' => 'Adoption cancelled successfully'], 201);
+        return response()->json(['response' => ['message' => 'Adoption cancelled successfully', 'result' => $adoption]], 201);
     }
 }
