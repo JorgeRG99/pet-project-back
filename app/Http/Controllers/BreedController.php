@@ -11,11 +11,10 @@ class BreedController extends Controller
     public function createBreed(Request $request)
     {
         BreedValidation::validateBreedRequest($request);
-        $data = json_decode($request->getContent());
 
         $breed = Breed::create([
-            'name' => $request->nameF,
-            'specie_id' => $request->specie
+            'name' => $request->name,
+            'specie_id' => $request->specie_id
         ]);
 
         $response = ['response' => 'Breed created successfully!', 'breed' => $breed];

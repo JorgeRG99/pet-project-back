@@ -15,9 +15,9 @@ class BreedValidation
         $request->validate(self::RULES);
     }
 
-    public static function validateBreedObject($pet)
+    public static function validateBreedObject($breed)
     {
-        $validator = Validator::make($pet->toArray(), self::RULES);
+        $validator = Validator::make($breed->toArray(), self::RULES);
 
         if ($validator->fails()) {
             throw new \Illuminate\Validation\ValidationException($validator);
