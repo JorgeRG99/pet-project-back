@@ -14,13 +14,14 @@ return new class extends Migration
         Schema::create('adoptions', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->date('adoption_date')->nullable();
-            $table->string('status');
 
+            $table->uuid('status_id');
             $table->uuid('pet_id');
             $table->uuid('user_id');
 
             $table->foreign('pet_id')->references('id')->on('pets');
             $table->foreign('user_id')->references('id')->on('users');
+            $table->foreign('status_id')->references('id')->on('statuses');
             $table->timestamps();
         });
     }
