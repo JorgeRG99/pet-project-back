@@ -15,7 +15,7 @@ return new class extends Migration
             $table->uuid('id')->primary();
             $table->date('adoption_date')->nullable();
             $table->date('cancellation_date')->nullable();
-
+            
             $table->uuid('status_id');
             $table->uuid('pet_id');
             $table->uuid('user_id');

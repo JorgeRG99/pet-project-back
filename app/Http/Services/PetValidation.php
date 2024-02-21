@@ -8,8 +8,8 @@ class PetValidation
 {
     const RULES = [
         'name' => 'required|string|max:191',
-        'species' => 'required|string|max:191',
-        'breed' => 'required|string|max:191',
+        'breed' => 'required',
+        'species' => 'required',
         'age' => 'required|integer',
         'gender' => 'required|string|max:191',
         'additional_info' => 'nullable|string|max:191',
