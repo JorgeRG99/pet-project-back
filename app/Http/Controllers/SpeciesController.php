@@ -30,4 +30,15 @@ class SpeciesController extends Controller
 
         return response()->json($response, 201);
     }
+
+    public function deleteSpecie(Request $request)
+    {
+        $specie = Species::findOrFail($request->id);
+        
+        SpecieValidation::validateSpecieObject($specie);
+        $specie->delete();
+        $status = 200;
+        $response = ['response' => 'Pet deleted successfully!'];
+        return response()->json($response, $status);
+    }
 }
