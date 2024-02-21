@@ -75,7 +75,7 @@ Route::middleware('auth:sanctum', 'restrictRole:worker')->group(function () {
 });
 
 
-// ------------ Specie -------------
+// ------------ Breed -------------
 Route::get('/breeds', [BreedController::class, 'getAllBreeds']);
 Route::middleware('auth:sanctum', 'restrictRole:worker')->group(function () {
     Route::post('/breed', [BreedController::class, 'createBreed']);
