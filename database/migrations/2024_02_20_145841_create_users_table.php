@@ -15,12 +15,13 @@ return new class extends Migration
             $table->uuid('id')->primary();
             $table->string('name', 150);
             $table->string('last_name', 300);
-            $table->string('email', 300)->unique();
+            $table->string('email')->unique();
             $table->string('password');
             $table->string('dni', 9);
             $table->string('phone', 9);
             $table->boolean('status')->default(true);
             $table->date('birth_date');
+            $table->enum('role', [ 'worker', 'user' ])->default('user');
             $table->timestamps();
         });
     }

@@ -9,19 +9,17 @@ class UserValidation {
     const RULES = [
         'name' => 'required|string|max:150',
         'last_name' => 'required|string|max:300',
-        'email' => 'required|unique:users,email|max:300',
+        'email' => 'required|max:300',
         'birth_date' => 'required|date|before:-18 years',
         'dni' => ['required', 'regex:/^[0-9]{8}[A-Z]$/i'],
         'phone' => 'required|digits:9',
-    ];
-
-    const PASSWORD_RULE = [
-        'password' => 'required|string|min:8',
+        'role' => 'in:worker,user',
+        'password' => 'sometimes|required|string|min:8',
     ];
     
     public static function validateUserRequest($request)
     {
-        $request->validate(array_merge(self::RULES, self::PASSWORD_RULE));
+        $request->validate(self::RULES);
     }
 
     public static function validateUserObject($user) {

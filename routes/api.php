@@ -1,7 +1,9 @@
 <?php
 
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\PetController;
 use App\Http\Controllers\AdoptionsController;
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -17,18 +19,15 @@ use Illuminate\Support\Facades\Route;
 */
 
 // ----------- AUTHENTICATION -----------
-Route::post('/login', [UserController::class, 'login']);
+Route::post('/login', [AuthController::class, 'login']);
 Route::post('/register', [UserController::class, 'createUser']);
 
 Route::middleware('auth:sanctum')->group(function () {
-    Route::post('/logout', [UserController::class, 'logout']);
+    Route::post('/logout', [AuthController::class, 'logout']);
 });
 
-// ------------ ADMIN -------------
-Route::post('/loginAdmin', [AdminController::class, 'loginAdmin']);
-Route::post('/createAdmin', [AdminController::class, 'createAdmin']);
-Route::middleware('auth:sanctum')->group(function () {
-    Route::post('/logOutAdmin', [AdminController::class, 'logOutAdmin']);
+Route::middleware(['auth:sanctum', 'restrictRole:worker'])->group(function () {
+    Route::post('/createWorker', [AuthController::class, 'createWorker']);
 });
 
 // ------------ USER -------------
@@ -41,12 +40,25 @@ Route::middleware('auth:sanctum')->group(function () {
 // ------------ ADOPTIONS -------------
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/yourAdoptions', [AdoptionsController::class, 'yourAdoptions']);
-    Route::get('/adoptionsByUser', [AdoptionsController::class, 'getAdoptionsByUser']);
-    Route::get('/adoptionsByPet', [AdoptionsController::class, 'getAdoptionsByPet']);
     Route::post('/requestAdoption', [AdoptionsController::class, 'requestAdoption']);
-    Route::post('/acceptAdoption', [AdoptionsController::class, 'acceptAdoption']);
-    Route::patch('/confirmAdoption', [AdoptionsController::class, 'confirmAdoption']);
-    Route::delete('/cancelAdoption', [AdoptionsController::class, 'cancelAdoption']);
+});
+
+Route::middleware(['auth:sanctum', 'restrictRole:worker'])->group(function () {
+    Route::get('/adoptionsByUser/{id}', [AdoptionsController::class, 'getAdoptionsByUser']);
+    Route::get('/adoptionsByPet/{id}', [AdoptionsController::class, 'getAdoptionsByPet']);
+    Route::patch('/acceptAdoption/{id}', [AdoptionsController::class, 'acceptAdoption']);
+    Route::patch('/confirmAdoption/{id}', [AdoptionsController::class, 'confirmAdoption']);
+    Route::delete('/cancelAdoption/{id}', [AdoptionsController::class, 'cancelAdoption']);
+});
+
+
+// ------------ PET -------------
+Route::get('/pets', [PetController::class, 'getAllPets']);
+Route::get('/pet/{id}', [PetController::class, 'getPet']);
+Route::middleware('auth:sanctum', 'restrictRole:worker')->group(function () {
+    Route::post('/pet', [PetController::class, 'createPet']);
+    Route::patch('/pet/{id}', [PetController::class, 'updatePet']);
+    Route::delete('/pet/{id}', [PetController::class, 'deletePet']);
 });
 
 

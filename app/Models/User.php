@@ -19,7 +19,8 @@ class User extends Authenticatable
         'birth_date',
         'status',
         'phone',
-        'dni'
+        'dni',
+        'role'
     ];
 
     /**
