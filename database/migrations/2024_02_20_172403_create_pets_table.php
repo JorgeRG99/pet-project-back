@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('pets', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->string('name');
-            $table->string('species');
+            $table->foreign('specie_id')->references('id')->on('species');
             $table->string('breed');
             $table->integer('age');
             $table->string('gender');

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Services\PetValidation;
 use App\Models\Pet;
+use App\Models\Species;
 use Illuminate\Http\Request;
 
 class PetController extends Controller
@@ -13,9 +14,9 @@ class PetController extends Controller
         PetValidation::validatePetRequest($request);
         $data = json_decode($request->getContent());
 
-        Pet::create([
+       $pet = Pet::create([
             'name' => $request->name,
-            'species' => $request->species,
+            'specie_id' => $request->species,
             'age' => $request->age,
             'breed' => $request->breed,
             'gender' => $request->gender,
@@ -24,7 +25,7 @@ class PetController extends Controller
             'weight' => $request->weight
         ]);
 
-        $response = ['response' => 'Pet created successfully!'];
+        $response = ['response' => 'Pet created successfully!', 'pet' => $pet];
 
         return response()->json($response, 201);
     }
@@ -60,6 +61,8 @@ class PetController extends Controller
         return response()->json($response, $status);
     }
 
+
+
     public function deletePet(Request $request)
     {
         $pet = Pet::findOrFail($request->id);
@@ -68,6 +71,16 @@ class PetController extends Controller
         $pet->update();
         $status = 200;
         $response = ['response' => 'Pet deleted successfully!'];
+        return response()->json($response, $status);
+    }
+
+
+    public function getPetBySpecie(Request $request)
+    {
+        $species = Species::findOrFail($request->id);
+        $pets = $species->pets()->get();
+        $status = 200;
+        $response = ['response' => $pets];
         return response()->json($response, $status);
     }
 }

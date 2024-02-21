@@ -16,4 +16,9 @@ class Species extends Model
         'specie',
         'active'
     ];
+
+    public function pets()
+    {
+        return $this->hasMany(Pet::class);
+    }
 }

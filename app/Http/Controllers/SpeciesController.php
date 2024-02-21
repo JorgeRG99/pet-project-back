@@ -22,7 +22,7 @@ class SpeciesController extends Controller
         return response()->json($response, 201);
     }
 
-    public function getSpecies()
+    public function getAllSpecies()
     {
         $species = Species::all();
 
