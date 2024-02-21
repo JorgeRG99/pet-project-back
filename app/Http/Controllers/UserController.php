@@ -35,27 +35,6 @@ class UserController extends Controller
         return response()->json($response, 201);
     }
 
-    public function createAdmin(Request $request)
-    {
-        UserValidation::validateUserRequest($request);
-        $data = json_decode($request->getContent());
-
-        User::create([
-            'name' => $data->name,
-            'last_name' => $data->last_name,
-            'email' => $data->email,
-            'password' => Hash::make($data->password),
-            'birth_date' => $data->birth_date,
-            'phone' => $data->phone,
-            'dni' => $data->dni,
-            'role' => $data->role
-        ]);
-
-        $response = ['response' => 'User created successfully!'];
-
-        return response()->json($response, 201);
-    }
-
     public function updateUser(Request $request)
     {
         $data = json_decode($request->getContent(), true);
