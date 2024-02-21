@@ -34,9 +34,7 @@ class SpeciesController extends Controller
     public function deleteSpecie(Request $request)
     {
         $specie = Species::findOrFail($request->id);
-        
-        SpecieValidation::validateSpecieObject($specie);
-        $specie->delete();
+        $specie->update(['active' => false]);
         $status = 200;
         $response = ['response' => 'Pet deleted successfully!'];
         return response()->json($response, $status);

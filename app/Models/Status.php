@@ -6,14 +6,18 @@ use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Species extends Model
+class Status extends Model
 {
     use HasFactory, HasUuids;
 
-    protected $table = 'species';
+    protected $table = 'statuses';
 
     protected $fillable = [
-        'specie',
-        'active'
+        'name'
     ];
+
+    public function adoptions()
+    {
+        return $this->hasMany(Adoptions::class);
+    }
 }

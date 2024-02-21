@@ -57,7 +57,7 @@ class UserController extends Controller
     public function deleteUser()
     {
         $user = User::findOrFail(Auth::id());
-        $user->update(['status' => false]);
+        $user->update(['active' => false]);
 
         $status = 200;
         $response = ['response' => 'User deleted successfully!'];

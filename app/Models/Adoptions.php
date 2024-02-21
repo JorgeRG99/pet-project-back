@@ -11,11 +11,13 @@ class Adoptions extends Model
 {
     use HasFactory, HasUuids, HasApiTokens;
 
+    protected $table = 'adoptions';
+
     protected $fillable = [
         'pet_id',
         'user_id',
+        'status_id',
         'adoption_date',
-        'status',
     ];
 
     public function user()
@@ -26,5 +28,10 @@ class Adoptions extends Model
     public function pet()
     {
         return $this->belongsTo(Pet::class);
+    }
+
+    public function status()
+    {
+        return $this->belongsTo(Status::class);
     }
 }
