@@ -13,15 +13,17 @@ return new class extends Migration
     {
         Schema::create('pets', function (Blueprint $table) {
             $table->uuid('id')->primary();
+            $table->boolean('active')->default(true);
             $table->string('name');
-            $table->foreign('specie_id')->references('id')->on('species');
-            $table->string('breed');
             $table->integer('age');
+            $table->string('weight');
             $table->string('gender');
             $table->string('additional_info');
-            $table->boolean('active')->default(true);
             $table->date('date_entry');
-            $table->string('weight');
+
+            $table->uuid('breed_id');
+
+            $table->foreign('breed_id')->references('id')->on('species');
             $table->timestamps();
         });
     }

@@ -4,6 +4,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\PetController;
 use App\Http\Controllers\AdoptionsController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\BreedController;
 use App\Http\Controllers\SpeciesController;
 use App\Http\Controllers\UserController;
 use App\Models\Species;
@@ -67,10 +68,18 @@ Route::middleware('auth:sanctum', 'restrictRole:worker')->group(function () {
 
 
 // ------------ Specie -------------
-Route::get('/species', [PetController::class, 'getAllSpecies']);
+Route::get('/species', [SpeciesController::class, 'getAllSpecies']);
 Route::middleware('auth:sanctum', 'restrictRole:worker')->group(function () {
     Route::post('/specie', [SpeciesController::class, 'createSpecie']);
     Route::delete('/specie/{id}', [SpeciesController::class, 'deleteSpecie']);
+});
+
+
+// ------------ Specie -------------
+Route::get('/breeds', [BreedController::class, 'getAllBreeds']);
+Route::middleware('auth:sanctum', 'restrictRole:worker')->group(function () {
+    Route::post('/breed', [BreedController::class, 'createBreed']);
+    Route::delete('/breed/{id}', [BreedController::class, 'deleteBreed']);
 });
 
 

@@ -36,7 +36,7 @@ class SpeciesController extends Controller
         $specie = Species::findOrFail($request->id);
         $specie->update(['active' => false]);
         $status = 200;
-        $response = ['response' => 'Pet deleted successfully!'];
+        $response = ['response' => 'Specie deleted successfully!'];
         return response()->json($response, $status);
     }
 }
