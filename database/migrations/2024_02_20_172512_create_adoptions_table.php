@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('adoptions', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->date('adoption_date')->nullable();
+            $table->date('cancellation_date')->nullable();
 
             $table->uuid('status_id');
             $table->uuid('pet_id');

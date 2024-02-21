@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Adoptions;
+use Carbon\Carbon;
 use App\Models\Pet;
 use App\Models\Status;
 use App\Models\User;
@@ -69,7 +70,8 @@ class AdoptionsController extends Controller
         $confirmedStatus = Status::where('name', 'confirmed')->first();
 
         $adoption->update([
-            'status_id' => $confirmedStatus->id
+            'status_id' => $confirmedStatus->id,
+            'adoption_date' => date(Carbon::now()->toDateString())
         ]);
 
         return response()->json(['response' => 'Adoption confirmed successfully'], 201);
@@ -81,7 +83,8 @@ class AdoptionsController extends Controller
         $cancelledStatus = Status::where('name', 'cancelled')->first();
 
         $adoption->update([
-            'status_id' => $cancelledStatus->id
+            'status_id' => $cancelledStatus->id,
+            'adoption_date' => date(Carbon::now()->toDateString())
         ]);
 
         return response()->json(['response' => 'Adoption cancelled successfully'], 201);
