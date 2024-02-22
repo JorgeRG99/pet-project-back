@@ -16,14 +16,14 @@ class ExternalPetsController extends Controller
 
         $pet = ExternalPets::create($data);
 
-        $response = ['response' => 'Pet created successfully!', 'pet' => $pet];
+        $response = ['response' => ['message' => 'Pet created successfully!', 'result' => $pet]];
 
         return response()->json($response, 201);
     }
     public function getAllPets()
     {
         $pets = ExternalPets::all();
-        return response()->json(['response' => $pets], 201);
+        return response()->json(['response' => ['result' => $pets]], 201);
     }
 
     public function updatePet(Request $request)
@@ -38,23 +38,19 @@ class ExternalPetsController extends Controller
         PetValidation::validatePetObject($pet);
         $pet->update();
 
-        return response()->json(['response' => 'Pet updated successfully!'], 200);
+        return response()->json(['response' => ['message' => 'Pet updated successfully!', 'result' => $pet]], 200);
     }
 
     public function getPet(Request $request)
     {
-        return response()->json(['response' => ExternalPets::findOrFail($request->id)], 200);
+        return response()->json(['response' => ['result' => ExternalPets::findOrFail($request->id)]], 200);
     }
-
-
 
     public function deletePet(Request $request)
     {
         $pet = ExternalPets::findOrFail($request->id);
-        $pet['active'] = false;
-        PetValidation::validatePetObject($pet);
-        $pet->update();
-        return response()->json(['response' => 'Pet deleted successfully!'], 200);
+        $pet->delete();
+        return response()->json(['response' => ['message' => 'Pet deleted successfully!']], 200);
     }
 
 
@@ -62,6 +58,6 @@ class ExternalPetsController extends Controller
     {
         $species = Species::findOrFail($request->id);
         $pets = $species->pets()->get();
-        return response()->json(['response' => $pets], 200);
+        return response()->json(['response' => ['result' => $pets]], 200);
     }
 }

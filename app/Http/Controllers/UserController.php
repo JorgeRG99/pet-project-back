@@ -33,6 +33,6 @@ class UserController extends Controller
         $user = User::findOrFail(Auth::id());
         $user->update(['active' => false]);
 
-        return response()->json(['response' => 'User deleted successfully!'], 200);
+        return response()->json(['response' => ['message' => 'User deleted successfully!']], 200);
     }
 }

@@ -83,6 +83,6 @@ class VisitsController extends Controller
             'status_id' => $cancelledStatus->id
         ]);
 
-        return response()->json(['response' => 'Visit date cancelled successfully'], 201);
+        return response()->json(['response' => ['message' => 'Visit cancelled successfully']], 201);
     }
 }

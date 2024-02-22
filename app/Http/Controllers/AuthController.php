@@ -29,15 +29,14 @@ class AuthController extends Controller
 
 
                 $status = 200;
-                $response['response'] = 'Succesful access';
-                $response['token'] = $token->plainTextToken;
+                $response['response'] = ['message' => 'Successful login', 'token' => $token->plainTextToken];
             } else {
                 $status = 401;
-                $response['response'] = 'Invalid credentials';
+                $response['response'] = ['message' => 'Invalid credentials'];
             }
         } else {
             $status = 404;
-            $response['response'] = 'User not found';
+            $response['response'] =['message' => 'User not found'];
         }
 
         return response()->json($response, $status);

@@ -22,7 +22,7 @@ class SpeciesController extends Controller
     public function getAllSpecies()
     {
         $species = Species::all();
-        return response()->json(['response' => $species], 201);
+        return response()->json(['response' => ['result' => $species]], 201);
     }
 
     public function deleteSpecie(Request $request)
