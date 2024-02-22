@@ -4,6 +4,7 @@ use App\Http\Controllers\PetController;
 use App\Http\Controllers\AdoptionsController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BreedController;
+use App\Http\Controllers\CareServicesController;
 use App\Http\Controllers\SpeciesController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\VisitsController;
@@ -78,6 +79,17 @@ Route::get('/breeds', [BreedController::class, 'getAllBreeds']);
 Route::middleware('auth:sanctum', 'restrictRole:worker')->group(function () {
     Route::post('/breed', [BreedController::class, 'createBreed']);
     Route::delete('/breed/{id}', [BreedController::class, 'deleteBreed']);
+});
+
+
+// ------------ Care Services -------------    Route::patch('/service/{id}', [CareServicesController::class, 'updateCareService']);
+Route::get('/service/{id}', [CareServicesController::class, 'getCareService'])->middleware('auth:sanctum');
+
+Route::middleware('auth:sanctum', 'restrictRole:worker')->group(function () {
+    Route::get('/services', [CareServicesController::class, 'getAllCareServices']);
+    Route::post('/service', [CareServicesController::class, 'createCareService']);
+    Route::patch('/service/{id}', [CareServicesController::class, 'updateCareService']);
+    Route::delete('/service/{id}', [CareServicesController::class, 'deleteCareService']);
 });
 
 
