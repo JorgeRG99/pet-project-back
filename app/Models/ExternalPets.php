@@ -18,6 +18,8 @@ class ExternalPets extends Model
         'age',
         'gender',
         'additional_info',
-        'weight'
+        'weight',
+        'owner_id',
+        'active'
     ];
 }

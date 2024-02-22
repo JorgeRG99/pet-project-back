@@ -6,6 +6,7 @@ use App\Http\Services\PetValidation;
 use App\Models\ExternalPets;
 use App\Models\Species;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ExternalPetsController extends Controller
 {
@@ -15,6 +16,7 @@ class ExternalPetsController extends Controller
         $data = json_decode($request->getContent(), true);
 
         $pet = ExternalPets::create($data);
+        $pet['owner_id'] = Auth::id();
 
         $response = ['response' => ['message' => 'Pet created successfully!', 'result' => $pet]];
 
@@ -49,7 +51,9 @@ class ExternalPetsController extends Controller
     public function deletePet(Request $request)
     {
         $pet = ExternalPets::findOrFail($request->id);
-        $pet->delete();
+        $pet['active'] = false;
+        PetValidation::validatePetObject($pet);
+        $pet->update();
         return response()->json(['response' => ['message' => 'Pet deleted successfully!']], 200);
     }
 

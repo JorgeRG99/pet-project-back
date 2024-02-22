@@ -19,7 +19,8 @@ class Pet extends Model
         'gender',
         'additional_info',
         'date_entry',
-        'weight'
+        'weight',
+        'active'
     ];
 
     public function adoptions()

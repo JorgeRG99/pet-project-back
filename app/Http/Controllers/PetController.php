@@ -59,6 +59,6 @@ class PetController extends Controller
     {
         $species = Species::findOrFail($request->id);
         $pets = $species->pets()->get();
-        return response()->json(['response' => ['result' => '$pets']], 200);
+        return response()->json(['response' => ['result' => $pets]], 200);
     }
 }

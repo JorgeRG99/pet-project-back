@@ -45,7 +45,7 @@ class VisitsController extends Controller
             'status_id' => $pendingStatus->id
         ]);
 
-        return response()->json(['response' => ['message' => 'Visit scheduled successfully', 'visit' => $visit]], 201);
+        return response()->json(['response' => ['message' => 'Visit scheduled successfully', 'result' => $visit]], 201);
     }
 
     public function visitFinished(Request $request)
@@ -59,7 +59,7 @@ class VisitsController extends Controller
             'status_id' => $confirmedStatus->id
         ]);
 
-        return response()->json(['response' => ['message' => 'Visit scheduled successfully', 'visit' => $visit]], 201);
+        return response()->json(['response' => ['message' => 'Visit finished successfully', 'result' => $visit]], 201);
     }
 
     public function updateVisitDate(Request $request)
@@ -70,7 +70,7 @@ class VisitsController extends Controller
             'scheduled_date' => $data->scheduled_date
         ]);
 
-        return response()->json(['response' => ['message' => 'Visit date updated successfully', 'visit' => $visit]], 201);
+        return response()->json(['response' => ['message' => 'Visit date updated successfully', 'result' => $visit]], 201);
     }
 
     public function cancelVisit(Request $request)
