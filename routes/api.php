@@ -82,7 +82,7 @@ Route::middleware('auth:sanctum', 'restrictRole:worker')->group(function () {
 });
 
 
-// ------------ Care Services -------------    Route::patch('/service/{id}', [CareServicesController::class, 'updateCareService']);
+// ------------ Care Services -------------   
 Route::get('/service/{id}', [CareServicesController::class, 'getCareService'])->middleware('auth:sanctum');
 
 Route::middleware('auth:sanctum', 'restrictRole:worker')->group(function () {
