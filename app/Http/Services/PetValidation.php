@@ -14,7 +14,7 @@ class PetValidation
         'gender' => 'required|string|max:191',
         'additional_info' => 'nullable|string|max:191',
         'active' => 'sometimes|required|boolean',
-        'date_entry' => 'required|date',
+        'date_entry' => 'sometimes|required|date',
         'weight' => 'nullable|string|max:191',
     ];
 

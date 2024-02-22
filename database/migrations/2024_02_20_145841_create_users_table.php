@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('last_name', 300);
             $table->string('email')->unique();
             $table->string('password');
-            $table->string('dni', 9);
+            $table->string('dni', 9)->unique();
             $table->string('phone', 9);
             $table->boolean('active')->default(true);
             $table->date('birth_date');
