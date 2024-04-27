@@ -38,6 +38,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/user', [UserController::class, 'getUser']);
     Route::patch('/user', [UserController::class, 'updateUser']);
     Route::patch('/changePassword', [UserController::class, 'changePassword']);
+    Route::patch('/changeEmail', [UserController::class, 'changeEmail']);
     Route::delete('/user', [UserController::class, 'deleteUser']);
 });
 

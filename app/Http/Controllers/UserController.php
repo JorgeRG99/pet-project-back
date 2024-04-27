@@ -27,7 +27,21 @@ class UserController extends Controller
         } else {
             return response()->json(['response' => ['message' => 'Bad credentials']], 401);
         }
+    }
 
+    public function changeEmail(Request $request)
+    {
+        $data = json_decode($request->getContent());
+        $user = User::findOrFail(Auth::id());
+        
+        if (Hash::check($data->password, $user->password)) {
+            $user['email'] = $data->email;
+            UserValidation::validateUserObject($user);
+            $user->update();
+            return response()->json(['response' => ['message' => 'Email updated successfully!']], 200);
+        } else {
+            return response()->json(['response' => ['message' => 'Bad credentials']], 401);
+        }
     }
 
     public function updateUser(Request $request)
