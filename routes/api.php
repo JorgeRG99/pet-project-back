@@ -4,6 +4,7 @@ use App\Http\Controllers\PetController;
 use App\Http\Controllers\AdoptionsController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BreedController;
+use App\Http\Controllers\CareServicesController;
 use App\Http\Controllers\SpeciesController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\VisitsController;
