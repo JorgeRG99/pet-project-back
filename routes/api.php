@@ -84,6 +84,17 @@ Route::middleware('auth:sanctum', 'restrictRole:worker')->group(function () {
 });
 
 
+// ------------ Care Services -------------   
+Route::get('/service/{id}', [CareServicesController::class, 'getCareService'])->middleware('auth:sanctum');
+
+Route::middleware('auth:sanctum', 'restrictRole:worker')->group(function () {
+    Route::get('/services', [CareServicesController::class, 'getAllCareServices']);
+    Route::post('/service', [CareServicesController::class, 'createCareService']);
+    Route::patch('/service/{id}', [CareServicesController::class, 'updateCareService']);
+    Route::delete('/service/{id}', [CareServicesController::class, 'deleteCareService']);
+});
+
+
 
 
 
