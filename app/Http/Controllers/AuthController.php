@@ -9,6 +9,17 @@ use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
+    public function recoverSession(Request $request)
+    {
+        $user = $request->user();
+
+        if($user->active) {
+            return response()->json(['response' => ['userData' => $request->user()]], 200);
+        } else {
+            return response()->json(['response' => ['message' => 'User not found']], 404);
+        }
+    }
+
     public function login(Request $request)
     {
         $response = ['response' => ''];
@@ -17,11 +28,11 @@ class AuthController extends Controller
 
         $user = User::where("email", $data->email)->first();
 
-        if ($user) {
+        if ($user && $user->active) {
             if (Hash::check($request->password, $user->password)) {
                 $user->tokens()->delete();
 
-                if($user->role === 'worker') {
+                if ($user->role === 'worker') {
                     $token = $user->createToken('AuthToken', ['role' => 'worker']);
                 } else {
                     $token = $user->createToken('AuthToken', ['role' => 'user']);
@@ -29,14 +40,14 @@ class AuthController extends Controller
 
 
                 $status = 200;
-                $response['response'] = ['message' => 'Successful login', 'token' => $token->plainTextToken];
+                $response['response'] = ['message' => 'Successful login', 'token' => $token->plainTextToken, 'userData' => $user];
             } else {
                 $status = 401;
                 $response['response'] = ['message' => 'Invalid credentials'];
             }
         } else {
             $status = 404;
-            $response['response'] =['message' => 'User not found'];
+            $response['response'] = ['message' => 'User not found'];
         }
 
         return response()->json($response, $status);
@@ -71,7 +82,7 @@ class AuthController extends Controller
         ]);
 
         $token = $worker->createToken('AuthToken', ['role' => 'worker']);
-        return response()->json(['response' => ['message' => 'Worker created successfully!', 'token' => $token->plainTextToken]], 201);
+        return response()->json(['response' => ['message' => 'Worker created successfully!', 'token' => $token->plainTextToken, 'userData' => $worker]], 201);
     }
 
     public function createUser(Request $request)
@@ -90,6 +101,6 @@ class AuthController extends Controller
         ]);
 
         $token = $user->createToken('AuthToken', ['role' => 'user']);
-        return response()->json(['response' => ['message' => 'User created successfully!', 'token' => $token->plainTextToken]], 201);
+        return response()->json(['response' => ['message' => 'User created successfully!', 'token' => $token->plainTextToken, 'userData' => $user]], 201);
     }
 }

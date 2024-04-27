@@ -24,6 +24,7 @@ use Illuminate\Support\Facades\Route;
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/register', [AuthController::class, 'createUser']);
 Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/recoverSession', [AuthController::class, 'recoverSession']);
     Route::post('/logout', [AuthController::class, 'logout']);
 });
 Route::middleware(['auth:sanctum', 'restrictRole:worker'])->group(function () {
@@ -35,6 +36,7 @@ Route::middleware(['auth:sanctum', 'restrictRole:worker'])->group(function () {
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/user', [UserController::class, 'getUser']);
     Route::patch('/user', [UserController::class, 'updateUser']);
+    Route::patch('/changePassword', [UserController::class, 'changePassword']);
     Route::delete('/user', [UserController::class, 'deleteUser']);
 });
 
