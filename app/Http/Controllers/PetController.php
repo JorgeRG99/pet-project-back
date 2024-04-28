@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Services\PetValidation;
 use App\Models\Pet;
+use App\Models\Breed;
 use App\Models\Species;
 use Illuminate\Http\Request;
 
@@ -24,6 +25,40 @@ class PetController extends Controller
     {
         $pets = Pet::all();
         return response()->json(['response' => ['result' => $pets]], 201);
+    }
+
+    public function getDogs()
+    {
+        $result = [];
+        $pets = Pet::all();
+
+        foreach ($pets as $pet) {
+            $breed = Breed::find($pet->breed_id);
+
+            if ($breed->specie_id == 'dog') {
+                $pet['breed'] = $breed->name;
+                array_push($result, $pet);
+            };
+        }
+
+        return response()->json(['response' => ['result' => $result]], 200);
+    }
+
+    public function getCats()
+    {
+        $result = [];
+        $pets = Pet::all();
+
+        foreach ($pets as $pet) {
+            $breed = Breed::find($pet->breed_id);
+
+            if ($breed->specie_id == 'cat') {
+                $pet['breed'] = $breed->name;
+                array_push($result, $pet);
+            };
+        }
+
+        return response()->json(['response' => ['result' => $result]], 200);
     }
 
     public function updatePet(Request $request)

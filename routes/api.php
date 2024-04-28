@@ -59,6 +59,8 @@ Route::middleware(['auth:sanctum', 'restrictRole:worker'])->group(function () {
 
 
 // ------------ PET -------------
+Route::get('/dogs', [PetController::class, 'getDogs']);
+Route::get('/cats', [PetController::class, 'getCats']);
 Route::get('/pets', [PetController::class, 'getAllPets']);
 Route::get('/pet/{id}', [PetController::class, 'getPet']);
 Route::middleware('auth:sanctum', 'restrictRole:worker')->group(function () {

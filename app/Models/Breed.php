@@ -22,4 +22,9 @@ class Breed extends Model
     {
         return $this->hasMany(Pet::class);
     }
+
+    public function specie()
+    {
+        return $this->belongsTo(Species::class);
+    }
 }

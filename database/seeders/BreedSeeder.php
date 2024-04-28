@@ -15,27 +15,29 @@ class BreedSeeder extends Seeder
     public function run(): void
     {
         Breed::create([
+            "id" => '9b63cf9b-9495-440e-884d-19bd639003b1',
             "name" => "Labrador",
             "specie_id" => 'dog',
         ]);
 
         Breed::create([
-            "name" => "German Shepherd",
+            "id" => '9b63cf9b-96d5-4912-805b-ba534c3add3e',
+            "name" => "Pastor alemán",
             "specie_id" => 'dog',
         ]);
 
 
         // Cat breeds
         Breed::create([
-            "name" => "Siamese",
+            "id" => '9b63cf9b-9a9d-4f5d-8f0b-7c8f7b9d7d8f',
+            "name" => "Siamés",
             "specie_id" => 'cat',
         ]);
 
         Breed::create([
-            "name" => "Persian",
+            "id" => '9b63cf9b-9a9d-4f5d-8f0b-7c8f7b9d7d8e',
+            "name" => "Persa",
             "specie_id" => 'cat',
         ]); 
     }
 }
-//Dog -> Specie_id ->9b63cf9b-9495-440e-884d-19bd639003b1
-//Cat -> Specie_id ->9b63cf9b-96d5-4912-805b-ba534c3add3e 
