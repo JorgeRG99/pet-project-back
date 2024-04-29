@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Status;
+use App\Models\Statuses;
 use App\Models\TrainingServices;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -29,7 +30,7 @@ class TrainingServicesController extends Controller
     public function scheduleTraining(Request $request)
     {
         $data = json_decode($request->getContent());
-        $pendingStatus = Status::where('name', 'pending')->first();
+        $pendingStatus = Statuses::where('name', 'pending')->first();
 
         $tarining = TrainingServices::create([
             'user_id' => $data->user_id,
@@ -46,7 +47,7 @@ class TrainingServicesController extends Controller
         $data = json_decode($request->getContent());
         $training = TrainingServices::findOrFail($data->training_id);
 
-        $confirmedStatus = Status::where('name', 'confirmed')->first();
+        $confirmedStatus = Statuses::where('name', 'confirmed')->first();
 
         $training->update([
             'status_id' => $confirmedStatus->id
@@ -70,7 +71,7 @@ class TrainingServicesController extends Controller
     {
         $data = json_decode($request->getContent());
         $training = TrainingServices::findOrFail($data->training_id);
-        $cancelledStatus = Status::where('name', 'cancelled')->first();
+        $cancelledStatus = Statuses::where('name', 'cancelled')->first();
 
         $training->update([
             'status_id' => $cancelledStatus->id

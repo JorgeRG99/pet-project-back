@@ -18,6 +18,7 @@ class Adoptions extends Model
         'user_id',
         'status_id',
         'adoption_date',
+        'cancellation_date',
     ];
 
     public function user()
@@ -32,6 +33,6 @@ class Adoptions extends Model
 
     public function status()
     {
-        return $this->belongsTo(Status::class);
+        return $this->belongsTo(Statuses::class);
     }
 }

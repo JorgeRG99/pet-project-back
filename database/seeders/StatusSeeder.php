@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\Status;
+use App\Models\Statuses;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -13,9 +13,9 @@ class StatusSeeder extends Seeder
      */
     public function run(): void
     {
-        Status::create(["name" => "pending"]);
-        Status::create(["name" => "accepted"]);
-        Status::create(["name" => "confirmed"]);
-        Status::create(["name" => "cancelled"]);
+        Statuses::create(["name" => "pending"]);
+        Statuses::create(["name" => "accepted"]);
+        Statuses::create(["name" => "confirmed"]);
+        Statuses::create(["name" => "cancelled"]);
     }
 }

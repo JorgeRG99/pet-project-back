@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Status;
+use App\Models\Statuses;
 use App\Models\Visits;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -36,7 +37,7 @@ class VisitsController extends Controller
     public function scheduleVisit(Request $request)
     {
         $data = json_decode($request->getContent());
-        $pendingStatus = Status::where('name', 'pending')->first();
+        $pendingStatus = Statuses::where('name', 'pending')->first();
 
         $visit = Visits::create([
             'user_id' => $data->user_id,
@@ -53,7 +54,7 @@ class VisitsController extends Controller
         $data = json_decode($request->getContent());
         $visit = Visits::findOrFail($data->visit_id);
 
-        $confirmedStatus = Status::where('name', 'confirmed')->first();
+        $confirmedStatus = Statuses::where('name', 'confirmed')->first();
 
         $visit->update([
             'status_id' => $confirmedStatus->id
@@ -77,7 +78,7 @@ class VisitsController extends Controller
     {
         $data = json_decode($request->getContent());
         $visit = Visits::findOrFail($data->visit_id);
-        $cancelledStatus = Status::where('name', 'cancelled')->first();
+        $cancelledStatus = Statuses::where('name', 'cancelled')->first();
 
         $visit->update([
             'status_id' => $cancelledStatus->id

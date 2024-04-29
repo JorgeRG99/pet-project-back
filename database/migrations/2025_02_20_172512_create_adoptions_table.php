@@ -16,13 +16,13 @@ return new class extends Migration
             $table->date('adoption_date')->nullable();
             $table->date('cancellation_date')->nullable();
             
-            $table->uuid('status_id');
+            $table->string('status_id')->default('pending');
             $table->uuid('pet_id');
             $table->uuid('user_id');
 
             $table->foreign('pet_id')->references('id')->on('pets');
             $table->foreign('user_id')->references('id')->on('users');
-            $table->foreign('status_id')->references('id')->on('statuses');
+            $table->foreign('status_id')->references('name')->on('statuses');
             $table->timestamps();
         });
     }

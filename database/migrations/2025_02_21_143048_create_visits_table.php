@@ -15,13 +15,13 @@ return new class extends Migration
             $table->uuid('id')->primary();
             $table->dateTime('scheduled_date');
 
-            $table->uuid('status_id');
+            $table->string('status_id');
             $table->uuid('pet_id');
             $table->uuid('user_id');
 
             $table->foreign('pet_id')->references('id')->on('pets');
             $table->foreign('user_id')->references('id')->on('users');
-            $table->foreign('status_id')->references('id')->on('statuses');
+            $table->foreign('status_id')->references('name')->on('statuses');
             $table->timestamps();
         });
     }
