@@ -24,6 +24,12 @@ class PetController extends Controller
     public function getAllPets()
     {
         $pets = Pet::all();
+
+        foreach ($pets as $pet) {
+            $breed = Breed::find($pet->breed_id);
+            $pet['breed'] = $breed->name;
+        }
+
         return response()->json(['response' => ['result' => $pets]], 201);
     }
 
