@@ -23,7 +23,7 @@ class PetController extends Controller
     }
     public function getAllPets()
     {
-        $pets = Pet::all();
+        $pets = Pet::where('active', true)->get();
 
         foreach ($pets as $pet) {
             $breed = Breed::find($pet->breed_id);
@@ -73,13 +73,14 @@ class PetController extends Controller
 
         $pet = Pet::findOrFail($request->id);
         foreach ($data as $key => $value) {
-            $pet->{$key} = $value;
+            $pet[$key] = $value;
         }
-
+        
         PetValidation::validatePetObject($pet);
         $pet->update();
 
         return response()->json(['response' => ['message' => 'Pet updated successfully!', 'result' => $pet]], 200);
+        
     }
 
     public function getPet(Request $request)
@@ -89,7 +90,8 @@ class PetController extends Controller
 
     public function deletePet(Request $request)
     {
-        $pet = Pet::findOrFail($request->id);
+        $data = json_decode($request->getContent());
+        $pet = Pet::findOrFail($data->id);
         $pet['active'] = false;
         PetValidation::validatePetObject($pet);
         $pet->update();

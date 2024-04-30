@@ -65,8 +65,8 @@ Route::get('/pet/{id}', [PetController::class, 'getPet']);
 Route::middleware('auth:sanctum', 'restrictRole:worker')->group(function () {
     Route::get('/pets', [PetController::class, 'getAllPets']);
     Route::post('/pet', [PetController::class, 'createPet']);
-    Route::patch('/pet/{id}', [PetController::class, 'updatePet']);
-    Route::delete('/pet/{id}', [PetController::class, 'deletePet']);
+    Route::patch('/pet', [PetController::class, 'updatePet']);
+    Route::delete('/pet', [PetController::class, 'deletePet']);
 });
 
 
