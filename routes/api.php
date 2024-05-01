@@ -47,13 +47,14 @@ Route::middleware('auth:sanctum')->group(function () {
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/yourAdoptions', [AdoptionsController::class, 'yourAdoptions']);
     Route::post('/requestAdoption', [AdoptionsController::class, 'requestAdoption']);
-    Route::post('/cancelAdoption', [AdoptionsController::class, 'cancelAdoption']);
+    Route::patch('/cancelAdoption', [AdoptionsController::class, 'cancelAdoption']);
 });
-Route::middleware(['auth:sanctum', 'restrictRole:worker'])->group(function () {
+Route::middleware('auth:sanctum', 'restrictRole:worker')->group(function () {
+    Route::get('/allAdoptions', [AdoptionsController::class, 'allAdoptions']);
     Route::get('/adoptionsByUser/{id}', [AdoptionsController::class, 'getAdoptionsByUser']);
     Route::get('/adoptionsByPet/{id}', [AdoptionsController::class, 'getAdoptionsByPet']);
-    Route::patch('/acceptAdoption/{id}', [AdoptionsController::class, 'acceptAdoption']);
-    Route::patch('/confirmAdoption/{id}', [AdoptionsController::class, 'confirmAdoption']);
+    Route::patch('/acceptAdoption', [AdoptionsController::class, 'acceptAdoption']);
+    Route::patch('/confirmAdoption', [AdoptionsController::class, 'confirmAdoption']);
 });
 
 

@@ -13,13 +13,32 @@ use Illuminate\Support\Facades\Auth;
 
 class AdoptionsController extends Controller
 {
+    public function allAdoptions()
+    {
+        $user = User::findOrFail(Auth::id());
+        $adoptions = Adoptions::all();
+
+        foreach ($adoptions as $adoption) {
+            $adoption['status'] = Statuses::where('name', $adoption->status_id)->first()->name;
+            $adoption['pet'] = Pet::where('id', $adoption->pet_id)->first();
+
+            $breed = Breed::find($adoption['pet']->breed_id);
+
+            $adoption['pet']['breed'] = $breed->name;
+
+            if ($breed->specie_id == 'dog') $adoption['pet']['specie'] = 'Perro';
+            else $adoption['pet']['specie'] = 'Gato';
+        };
+
+        return response()->json(['response' => ['result' => $adoptions]], 200);
+        return response()->json(['response' => ['result' => $adoptions]], 200);
+    }
 
     public function yourAdoptions()
     {
         $user = User::findOrFail(Auth::id());
         $adoptions = Adoptions::where('user_id', $user->id)
-                                ->where('cancellation_date', null)
-                                ->get();
+            ->get();
 
         foreach ($adoptions as $adoption) {
             $adoption['status'] = Statuses::where('name', $adoption->status_id)->first()->name;
@@ -68,11 +87,18 @@ class AdoptionsController extends Controller
 
     public function acceptAdoption(Request $request)
     {
-        $adoption = Adoptions::findOrFail($request->id);
+        $data = json_decode($request->getContent());
+        $adoption = Adoptions::findOrFail($data->id);
         $acceptedStatus = Statuses::where('name', 'accepted')->first();
 
+        $pet = Pet::findOrFail($adoption->pet_id);
+
+        $pet->update([
+            'active' => false
+        ]);
+
         $adoption->update([
-            'status_id' => $acceptedStatus->id
+            'status_id' => $acceptedStatus->name
         ]);
 
         return response()->json(['response' => ['message' => 'Adoption accepted successfully', 'result' => $adoption]], 201);
@@ -80,11 +106,12 @@ class AdoptionsController extends Controller
 
     public function confirmAdoption(Request $request)
     {
-        $adoption = Adoptions::findOrFail($request->id);
+        $data = json_decode($request->getContent());
+        $adoption = Adoptions::findOrFail($data->id);
         $confirmedStatus = Statuses::where('name', 'confirmed')->first();
 
         $adoption->update([
-            'status_id' => $confirmedStatus->id,
+            'status_id' => $confirmedStatus->name,
             'adoption_date' => date(Carbon::now()->toDateString())
         ]);
 
@@ -96,9 +123,13 @@ class AdoptionsController extends Controller
         $data = json_decode($request->getContent());
         $adoption = Adoptions::findOrFail($data->id);
         $cancelledStatus = Statuses::where('name', 'cancelled')->first();
+        $pet = Pet::findOrFail($adoption->pet_id);
+
+        $pet->update([
+            'active' => true
+        ]);
 
         $adoption['cancellation_date'] = date(Carbon::now()->toDateString());
-        $adoption['status_id'] = $cancelledStatus->id;
         $adoption->update([
             'status_id' => $cancelledStatus->name,
             'cancellation_date' => date(Carbon::now()->toDateString())
