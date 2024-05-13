@@ -10,8 +10,6 @@ class TrainingServices extends Model
 {
     use HasFactory, HasUuids;
 
-    protected $table = 'statuses';
-
     protected $fillable = [
         'scheduled_date',
         'external_pet_id',

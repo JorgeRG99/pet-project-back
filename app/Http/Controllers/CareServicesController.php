@@ -2,43 +2,73 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Services\CareServiceValidation;
 use App\Models\CareServices;
+use App\Models\HotelCapacity;
+use DateInterval;
+use DatePeriod;
+use DateTime;
 use Illuminate\Http\Request;
 
 class CareServicesController extends Controller
 {
+    public function yourCareServices()
+    {
+        $bookings = CareServices::where('user_id', auth()->user()->id)
+            ->where('cancelled', false)
+            ->get();
+        $response = ['response' => ['result' => $bookings]];
+
+        return response()->json($response, 200);
+    }
+
     public function createCareService(Request $request)
     {
-        CareServiceValidation::validateCareServiceRequest($request);
         $data = json_decode($request->getContent(), true);
+        $data['user_id'] = auth()->user()->id;
 
-        $care_service = CareServices::create($data);
+        CareServices::create($data);
 
-        $response = ['response' => ['message' => 'Care service created successfully!', 'result' => $care_service]];
+        $response = ['response' => ['message' => 'Care service created successfully!']];
 
         return response()->json($response, 201);
+    }
+
+    public function getUnavailableDates()
+    {
+        $hotelThresholdCapacity = HotelCapacity::first()->capacity;
+
+        $reservations = CareServices::select('arrive', 'departure')
+            ->where('cancelled', false)
+            ->get();
+
+        $allDays = [];
+
+        foreach ($reservations as $reservation) {
+            $period = new DatePeriod(
+                new DateTime($reservation->arrive),
+                new DateInterval('P1D'),
+                (new DateTime($reservation->departure))->modify('+1 day')
+            );
+
+            foreach ($period as $date) {
+                $allDays[] = $date->format('Y-m-d');
+            }
+        }
+
+        $daysCount = array_count_values($allDays);
+
+        $fullyBookedDays = array_keys(array_filter($daysCount, function ($count) use ($hotelThresholdCapacity) {
+            return $count > $hotelThresholdCapacity;
+        }));
+
+
+        return response()->json(['response' => ['result' => $fullyBookedDays]], 201);
     }
 
     public function getAllCareServices()
     {
         $care_services = CareServices::all();
         return response()->json(['response' => ['result' => $care_services]], 201);
-    }
-
-    public function updateCareService(Request $request)
-    {
-        $data = json_decode($request->getContent(), true);
-
-        $care_service = CareServices::findOrFail($request->id);
-        foreach ($data as $key => $value) {
-            $care_service->{$key} = $value;
-        }
-
-        CareServiceValidation::validateCareServiceObject($care_service);
-        $care_service->update();
-
-        return response()->json(['response' => ['message' => 'Care service updated successfully!', 'result' => $care_service]], 200);
     }
 
 
@@ -49,8 +79,10 @@ class CareServicesController extends Controller
 
     public function deleteCareService(Request $request)
     {
-        $care_service = CareServices::findOrFail($request->id);
-        $care_service->update(['active' => false]);
+        $data = json_decode($request->getContent());
+        $care_service = CareServices::findOrFail($data->id);
+        $care_service['cancelled'] = true;
+        $care_service->update();
         return response()->json(['response' => ['message' => 'Care service deleted successfully!']], 200);
     }
 }

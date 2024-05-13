@@ -13,10 +13,10 @@ class CareServices extends Model
     protected $table = 'care_services';
 
     protected $fillable = [
+        'arrive',
         'departure',
         'total_price',
-        'type',
-        'active',
+        'status',
         'external_pet_id',
         'user_id',
     ];

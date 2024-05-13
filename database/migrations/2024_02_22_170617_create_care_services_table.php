@@ -13,10 +13,10 @@ return new class extends Migration
     {
         Schema::create('care_services', function (Blueprint $table) {
             $table->uuid('id');
+            $table->date('arrive');
             $table->date('departure');
-            $table->integer('total_price');
-            $table->string('type');
-            $table->boolean('active')->default(true);
+            $table->unsignedInteger('total_price');
+            $table->boolean('cancelled')->default(false);
 
             $table->uuid('external_pet_id');
             $table->uuid('user_id');

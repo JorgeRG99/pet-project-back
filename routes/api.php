@@ -5,21 +5,11 @@ use App\Http\Controllers\AdoptionsController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BreedController;
 use App\Http\Controllers\CareServicesController;
+use App\Http\Controllers\ExternalPetsController;
 use App\Http\Controllers\SpeciesController;
 use App\Http\Controllers\UserController;
-use App\Http\Controllers\VisitsController;
+use App\Models\ExternalPets;
 use Illuminate\Support\Facades\Route;
-
-/*
-|--------------------------------------------------------------------------
-| API Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register API routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "api" middleware group. Make something great!
-|
-*/
 
 // ----------- AUTHENTICATION -----------
 Route::post('/login', [AuthController::class, 'login']);
@@ -58,7 +48,6 @@ Route::middleware('auth:sanctum', 'restrictRole:worker')->group(function () {
 });
 
 
-
 // ------------ PET -------------
 Route::get('/dogs', [PetController::class, 'getDogs']);
 Route::get('/cats', [PetController::class, 'getCats']);
@@ -71,8 +60,19 @@ Route::middleware('auth:sanctum', 'restrictRole:worker')->group(function () {
 });
 
 
+// ------------ EXTERNAL PET -------------
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/yourPetsWithDeleted', [ExternalPetsController::class, 'getYourPetsIncludingDeleted']);
+    Route::get('/yourPets', [ExternalPetsController::class, 'getYourPets']);
+    Route::get('/yourCats', [ExternalPetsController::class, 'getYourCats']);
+    Route::get('/yourDogs', [ExternalPetsController::class, 'getYourDogs']);
+    Route::post('/addPet', [ExternalPetsController::class, 'createPet']);
+    Route::patch('/updatePet', [ExternalPetsController::class, 'updatePet']);
+    Route::delete('/deletePet', [ExternalPetsController::class, 'deletePet']);
+});
 
-// ------------ Specie -------------
+
+// ------------ SPECIE -------------
 Route::get('/species', [SpeciesController::class, 'getAllSpecies']);
 Route::middleware('auth:sanctum', 'restrictRole:worker')->group(function () {
     Route::post('/specie', [SpeciesController::class, 'createSpecie']);
@@ -80,7 +80,7 @@ Route::middleware('auth:sanctum', 'restrictRole:worker')->group(function () {
 });
 
 
-// ------------ Breed -------------
+// ------------ BREED -------------
 Route::get('/breeds', [BreedController::class, 'getAllBreeds']);
 Route::middleware('auth:sanctum', 'restrictRole:worker')->group(function () {
     Route::post('/breed', [BreedController::class, 'createBreed']);
@@ -88,43 +88,13 @@ Route::middleware('auth:sanctum', 'restrictRole:worker')->group(function () {
 });
 
 
-// ------------ Care Services -------------   
-Route::get('/service/{id}', [CareServicesController::class, 'getCareService'])->middleware('auth:sanctum');
-
-Route::middleware('auth:sanctum', 'restrictRole:worker')->group(function () {
-    Route::get('/services', [CareServicesController::class, 'getAllCareServices']);
-    Route::post('/service', [CareServicesController::class, 'createCareService']);
-    Route::patch('/service/{id}', [CareServicesController::class, 'updateCareService']);
-    Route::delete('/service/{id}', [CareServicesController::class, 'deleteCareService']);
-});
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// ------------ ADOPTERS -------------
-// ------------ VISITS -------------
+// ------------ CARE SERVICES -------------   
 Route::middleware('auth:sanctum')->group(function () {
-    Route::get('/yourVisits', [VisitsController::class, 'yourVisits']);
-    Route::delete('/cancelVisit', [VisitsController::class, 'cancelVisit']);
-    Route::patch('/updateVisitDate', [VisitsController::class, 'updateVisitDate']);
+    Route::get('/unavailableDates', [CareServicesController::class, 'getUnavailableDates']);
+    Route::get('/yourBookings', [CareServicesController::class, 'yourCareServices']);
+    Route::post('/makeBooking', [CareServicesController::class, 'createCareService']);
+    Route::patch('/deleteBooking', [CareServicesController::class, 'deleteCareService']);
 });
 Route::middleware('auth:sanctum', 'restrictRole:worker')->group(function () {
-    Route::get('/allVisits', [VisitsController::class, 'allVisits']);
-    Route::get('/visitsWithUser', [VisitsController::class, 'visitsWithUser']);
-    Route::post('/scheduleVisit', [VisitsController::class, 'scheduleVisit']);
-    Route::patch('/visitFinished', [VisitsController::class, 'visitFinished']);
+    Route::get('/allBookings', [CareServicesController::class, 'getAllCareServices']);
 });

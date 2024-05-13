@@ -6,21 +6,12 @@ use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class ExternalPets extends Model
+class HotelCapacity extends Model
 {
     use HasFactory, HasUuids;
 
-    protected $table = 'external_pets';
-
     protected $fillable = [
         'id',
-        'name',
-        'breed_id',
-        'age',
-        'gender',
-        'additional_info',
-        'weight',
-        'owner_id',
-        'active'
+        'capacity',
     ];
 }
