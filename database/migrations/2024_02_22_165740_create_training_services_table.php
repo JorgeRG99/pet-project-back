@@ -13,15 +13,18 @@ return new class extends Migration
     {
         Schema::create('training_services', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->dateTime('scheduled_date');
+            $table->string('date');
+            $table->boolean('cancelled')->default(false);
+            $table->unsignedInteger('total_price');
 
-            $table->string('status_id');
+
             $table->uuid('external_pet_id');
-            $table->uuid('worker_id');
+            $table->time('hour');
+            $table->uuid('user_id');
 
             $table->foreign('external_pet_id')->references('id')->on('external_pets');
-            $table->foreign('worker_id')->references('id')->on('users');
-            $table->foreign('status_id')->references('name')->on('statuses');
+            $table->foreign('user_id')->references('id')->on('users');
+            $table->foreign('hour')->references('hour')->on('training_hours');
             $table->timestamps();
         });
     }

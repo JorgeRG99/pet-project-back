@@ -4,78 +4,98 @@ namespace App\Http\Controllers;
 
 use App\Models\Status;
 use App\Models\Statuses;
+use App\Models\TrainingHours;
 use App\Models\TrainingServices;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class TrainingServicesController extends Controller
 {
-    public function yourTrainingAppointments()
+    public function getPanel()
     {
-        $visits = TrainingServices::where('user_id', Auth::id())
-            ->where('scheduled_date', '>=', Carbon::now())
-            ->with('status')
+        $now = Carbon::now();
+        $trainings = TrainingServices::where(function($query) use ($now) {
+            $query->where('date', '>', $now->toDateString())
+                  ->orWhere(function($query) use ($now) {
+                      $query->where('date', '=', $now->toDateString())
+                            ->where('hour', '>', $now->toTimeString());
+                  });
+        })->get();
+
+        foreach ($trainings as $appointment) {
+            $userData = User::find($appointment->user_id);
+            $appointment['user'] = $userData;
+        }
+        
+        return response()->json(['response' => ['result' => $trainings]], 200);
+    }
+
+    public function getFullBookedDates()
+    {
+        $fullBookedDates = TrainingServices::select('date')
+            ->where('cancelled', false)
+            ->groupBy('date')
+            ->havingRaw('COUNT(*) >= 5')
             ->get();
 
-        return response()->json(['response' => ['result' => $visits]], 200);
+        return response()->json(['response' => ['result' => $fullBookedDates]], 200);
+    }
+
+    public function getAvailableHours(Request $request)
+    {
+        $date = $request->input('date');
+        $allHours = TrainingHours::pluck('hour')->all();
+        $bookedHours = TrainingServices::where('date', $date)
+            ->where('cancelled', false)
+            ->pluck('hour')
+            ->all();
+
+        $result = [];
+
+        foreach ($allHours as $hour) {
+            if (!in_array($hour, $bookedHours)) {
+                $result[] = $hour;
+            }
+        }
+
+        return response()->json(['response' => ['result' => $result]], 200);
+    }
+
+    public function yourTrainingAppointments()
+    {
+        $trainings = TrainingServices::where('user_id', Auth::id())->get();
+        return response()->json(['response' => ['result' => $trainings]], 200);
     }
 
     public function allTrainingAppointments()
     {
-        $visits = TrainingServices::all()->load('status');
-        return response()->json(['response' => ['result' => $visits]], 200);
+        $trainings = TrainingServices::all()->load('status');
+        return response()->json(['response' => ['result' => $trainings]], 200);
     }
 
     public function scheduleTraining(Request $request)
     {
         $data = json_decode($request->getContent());
-        $pendingStatus = Statuses::where('name', 'pending')->first();
 
-        $tarining = TrainingServices::create([
-            'user_id' => $data->user_id,
-            'external_pet_id' => $data->pet_id,
-            'scheduled_date' => $data->scheduled_date,
-            'status_id' => $pendingStatus->id
+        TrainingServices::create([
+            'user_id' => auth()->id(),
+            'external_pet_id' => $data->external_pet_id,
+            'date' => $data->date,
+            'hour' => $data->hour,
+            'total_price' => $data->total_price
         ]);
 
-        return response()->json(['response' => ['message' => 'Training scheduled successfully', 'result' => $tarining]], 201);
-    }
-
-    public function trainingFinished(Request $request)
-    {
-        $data = json_decode($request->getContent());
-        $training = TrainingServices::findOrFail($data->training_id);
-
-        $confirmedStatus = Statuses::where('name', 'confirmed')->first();
-
-        $training->update([
-            'status_id' => $confirmedStatus->id
-        ]);
-
-        return response()->json(['response' => ['message' => 'Training finished successfully', 'result' => $training]], 201);
-    }
-
-    public function updateTrainingDate(Request $request)
-    {
-        $data = json_decode($request->getContent());
-        $training = TrainingServices::findOrFail($data->training_id);
-        $training->update([
-            'scheduled_date' => $data->scheduled_date
-        ]);
-
-        return response()->json(['response' => ['message' => 'Training date updated successfully', 'result' => $training]], 201);
+        return response()->json(['response' => ['message' => 'Training scheduled successfully']], 201);
     }
 
     public function cancelTraining(Request $request)
     {
         $data = json_decode($request->getContent());
-        $training = TrainingServices::findOrFail($data->training_id);
-        $cancelledStatus = Statuses::where('name', 'cancelled')->first();
-
-        $training->update([
-            'status_id' => $cancelledStatus->id
-        ]);
+        $training = TrainingServices::findOrFail($data->id);
+        $training['cancelled'] = true;
+        $training->update();
 
         return response()->json(['response' => ['message' => 'Training cancelled successfully']], 201);
     }

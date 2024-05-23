@@ -38,6 +38,19 @@ class ExternalPetsController extends Controller
         return response()->json(['response' => ['result' => $pets]], 200);
     }
 
+    public function getAllPetsWithDeleted()
+    {
+        $pets = ExternalPets::all();
+
+        foreach ($pets as $pet) {
+            $breed = Breed::find($pet->breed_id);
+            $pet['breed'] = $breed->name;
+            $pet['specie'] = $breed->specie_id;
+        }
+
+        return response()->json(['response' => ['result' => $pets]], 201);
+    }
+
     public function getYourPets()
     {
         $pets = ExternalPets::where('active', true)

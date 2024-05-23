@@ -25,9 +25,9 @@ class AdoptionsController extends Controller
             $breed = Breed::find($adoption['pet']->breed_id);
 
             $adoption['pet']['breed'] = $breed->name;
-
-            if ($breed->specie_id == 'dog') $adoption['pet']['specie'] = 'Perro';
-            else $adoption['pet']['specie'] = 'Gato';
+            $adoption['pet']['specie'] = $breed->specie_id;
+            $userData = User::find($adoption->user_id);
+            $adoption['user'] = $userData;
         };
 
         return response()->json(['response' => ['result' => $adoptions]], 200);
@@ -47,9 +47,7 @@ class AdoptionsController extends Controller
             $breed = Breed::find($adoption['pet']->breed_id);
 
             $adoption['pet']['breed'] = $breed->name;
-
-            if ($breed->specie_id == 'dog') $adoption['pet']['specie'] = 'Perro';
-            else $adoption['pet']['specie'] = 'Gato';
+            $adoption['pet']['specie'] = $breed->specie_id;
         };
 
         return response()->json(['response' => ['result' => $adoptions]], 200);

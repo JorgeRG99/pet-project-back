@@ -28,6 +28,7 @@ class PetController extends Controller
         foreach ($pets as $pet) {
             $breed = Breed::find($pet->breed_id);
             $pet['breed'] = $breed->name;
+            $pet['specie'] = $breed->specie_id;
         }
 
         return response()->json(['response' => ['result' => $pets]], 201);

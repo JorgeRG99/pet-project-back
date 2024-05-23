@@ -21,5 +21,7 @@ class DatabaseSeeder extends Seeder
         $this->call(ExternalPetsSeeder::class);
         $this->call(HotelCapacitySeeder::class);
         $this->call(CareServiceSeeder::class);
+        $this->call(TrainingHoursSeeder::class);
+        $this->call(TrainingServiceSeeder::class);
     }
 }

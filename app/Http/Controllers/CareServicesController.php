@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\CareServices;
 use App\Models\HotelCapacity;
+use App\Models\User;
+use Carbon\Carbon;
 use DateInterval;
 use DatePeriod;
 use DateTime;
@@ -11,6 +13,20 @@ use Illuminate\Http\Request;
 
 class CareServicesController extends Controller
 {
+    public function getPanel()
+    {
+        $today = Carbon::today();
+
+        $bookings = CareServices::where('arrive', '>', $today)->where('cancelled', false)->get();
+
+        foreach ($bookings as $booking) {
+            $userData = User::find($booking->user_id);
+            $booking['user'] = $userData;
+        }
+
+        return response()->json(['response' => ['result' => $bookings]], 200);
+    }
+
     public function yourCareServices()
     {
         $bookings = CareServices::where('user_id', auth()->user()->id)

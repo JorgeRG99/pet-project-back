@@ -9,11 +9,6 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 class UserController extends Controller
 {
-    public function getUser(Request $request)
-    {
-        return response()->json(['response' => ['result' => $request->user()]], 200);
-    }
-
     public function changePassword(Request $request)
     {
         $data = json_decode($request->getContent());

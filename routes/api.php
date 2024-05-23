@@ -7,6 +7,7 @@ use App\Http\Controllers\BreedController;
 use App\Http\Controllers\CareServicesController;
 use App\Http\Controllers\ExternalPetsController;
 use App\Http\Controllers\SpeciesController;
+use App\Http\Controllers\TrainingServicesController;
 use App\Http\Controllers\UserController;
 use App\Models\ExternalPets;
 use Illuminate\Support\Facades\Route;
@@ -25,7 +26,6 @@ Route::middleware(['auth:sanctum', 'restrictRole:worker'])->group(function () {
 
 // ------------ USER -------------
 Route::middleware('auth:sanctum')->group(function () {
-    Route::get('/user', [UserController::class, 'getUser']);
     Route::patch('/user', [UserController::class, 'updateUser']);
     Route::patch('/changePassword', [UserController::class, 'changePassword']);
     Route::patch('/changeEmail', [UserController::class, 'changeEmail']);
@@ -62,6 +62,7 @@ Route::middleware('auth:sanctum', 'restrictRole:worker')->group(function () {
 
 // ------------ EXTERNAL PET -------------
 Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/petsWithDeleted', [ExternalPetsController::class, 'getAllPetsWithDeleted']);
     Route::get('/yourPetsWithDeleted', [ExternalPetsController::class, 'getYourPetsIncludingDeleted']);
     Route::get('/yourPets', [ExternalPetsController::class, 'getYourPets']);
     Route::get('/yourCats', [ExternalPetsController::class, 'getYourCats']);
@@ -97,4 +98,17 @@ Route::middleware('auth:sanctum')->group(function () {
 });
 Route::middleware('auth:sanctum', 'restrictRole:worker')->group(function () {
     Route::get('/allBookings', [CareServicesController::class, 'getAllCareServices']);
+    Route::get('/bookingsPanel', [CareServicesController::class, 'getPanel']);
+});
+
+// ------------ TRAINING SERVICES -------------
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/yourTrainingBookings', [TrainingServicesController::class, 'yourTrainingAppointments']);
+    Route::get('/fullDates', [TrainingServicesController::class, 'getFullBookedDates']);
+    Route::get('/availableHours', [TrainingServicesController::class, 'getAvailableHours']);
+    Route::post('/scheduleTraining', [TrainingServicesController::class, 'scheduleTraining']);
+    Route::patch('/deleteTraining', [TrainingServicesController::class, 'cancelTraining']);
+});
+Route::middleware('auth:sanctum', 'restrictRole:worker')->group(function () {
+    Route::get('/trainingPanel', [TrainingServicesController::class, 'getPanel']);
 });
