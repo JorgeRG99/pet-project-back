@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\AdoptionMail;
 use App\Models\Adoptions;
 use App\Models\Breed;
 use Carbon\Carbon;
@@ -10,6 +11,7 @@ use App\Models\Statuses;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 
 class AdoptionsController extends Controller
 {
@@ -30,8 +32,13 @@ class AdoptionsController extends Controller
             $adoption['user'] = $userData;
         };
 
+            if ($breed->specie_id == 'dog')
+                $adoption['pet']['specie'] = 'Perro';
+            else
+                $adoption['pet']['specie'] = 'Gato';
+        
         return response()->json(['response' => ['result' => $adoptions]], 200);
-        return response()->json(['response' => ['result' => $adoptions]], 200);
+
     }
 
     public function yourAdoptions()
@@ -50,6 +57,11 @@ class AdoptionsController extends Controller
             $adoption['pet']['specie'] = $breed->specie_id;
         };
 
+            if ($breed->specie_id == 'dog')
+                $adoption['pet']['specie'] = 'Perro';
+            else
+                $adoption['pet']['specie'] = 'Gato';
+        
         return response()->json(['response' => ['result' => $adoptions]], 200);
     }
 
@@ -80,8 +92,15 @@ class AdoptionsController extends Controller
             'user_id' => Auth::id(),
             'pet_id' => $data->pet_id,
         ]);
+
+        $pet = Pet::findOrFail($data->pet_id);
+        $status = 'pending';
+
+        Mail::to(Auth::user()->email)->send(new AdoptionMail($pet, $status));
+
         return response()->json(['response' => ['message' => 'Adoption requested successfully', 'result' => $adoption]], 201);
     }
+
 
     public function acceptAdoption(Request $request)
     {
@@ -99,8 +118,13 @@ class AdoptionsController extends Controller
             'status_id' => $acceptedStatus->name
         ]);
 
+        $status = 'accepted';
+        $user = User::findOrFail($adoption->user_id);
+        Mail::to($user->email)->send(new AdoptionMail($pet, $status));
+
         return response()->json(['response' => ['message' => 'Adoption accepted successfully', 'result' => $adoption]], 201);
     }
+
 
     public function confirmAdoption(Request $request)
     {
@@ -110,11 +134,18 @@ class AdoptionsController extends Controller
 
         $adoption->update([
             'status_id' => $confirmedStatus->name,
-            'adoption_date' => date(Carbon::now()->toDateString())
+            'adoption_date' => Carbon::now()->toDateString()
         ]);
+        $user = User::findOrFail($adoption->user_id);
+
+        $pet = Pet::findOrFail($adoption->pet_id);
+        $status = 'confirmed';
+
+        Mail::to($user->email)->send(new AdoptionMail($pet, $status));
 
         return response()->json(['response' => ['message' => 'Adoption confirmed successfully', 'result' => $adoption]], 201);
     }
+
 
     public function cancelAdoption(Request $request)
     {
@@ -127,12 +158,16 @@ class AdoptionsController extends Controller
             'active' => true
         ]);
 
-        $adoption['cancellation_date'] = date(Carbon::now()->toDateString());
         $adoption->update([
             'status_id' => $cancelledStatus->name,
-            'cancellation_date' => date(Carbon::now()->toDateString())
+            'cancellation_date' => Carbon::now()->toDateString()
         ]);
 
-        return response()->json(['response' => ['message' => 'Adoption cancelled successfully']], 201);
+        $status = 'cancelled';
+        $user = User::findOrFail($adoption->user_id);
+        Mail::to($user->email)->send(new AdoptionMail($pet, $status));
+
+        return response()->json(['response' => ['message' => 'Adoption cancelled successfully', 'result' => $adoption]], 201);
     }
+
 }
