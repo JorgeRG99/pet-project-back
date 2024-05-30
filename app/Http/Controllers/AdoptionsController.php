@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\AdoptionMail;
 use App\Models\Adoptions;
 use App\Models\Breed;
 use Carbon\Carbon;
@@ -10,6 +11,7 @@ use App\Models\Statuses;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 
 class AdoptionsController extends Controller
 {
@@ -80,6 +82,12 @@ class AdoptionsController extends Controller
             'user_id' => Auth::id(),
             'pet_id' => $data->pet_id,
         ]);
+
+        $pet = Pet::findOrFail($data->pet_id);
+        $status = 'pending';
+
+        Mail::to(Auth::user()->email)->send(new AdoptionMail($pet, $status));
+
         return response()->json(['response' => ['message' => 'Adoption requested successfully', 'result' => $adoption]], 201);
     }
 
@@ -99,6 +107,9 @@ class AdoptionsController extends Controller
             'status_id' => $acceptedStatus->name
         ]);
 
+        $user = User::findOrFail($adoption->user_id);
+        Mail::to($user->email)->send(new AdoptionMail($pet, $acceptedStatus->name));
+
         return response()->json(['response' => ['message' => 'Adoption accepted successfully', 'result' => $adoption]], 201);
     }
 
@@ -112,6 +123,11 @@ class AdoptionsController extends Controller
             'status_id' => $confirmedStatus->name,
             'adoption_date' => date(Carbon::now()->toDateString())
         ]);
+
+        $user = User::findOrFail($adoption->user_id);
+        $pet = Pet::findOrFail($adoption->pet_id);
+
+        Mail::to($user->email)->send(new AdoptionMail($pet, $confirmedStatus->name));
 
         return response()->json(['response' => ['message' => 'Adoption confirmed successfully', 'result' => $adoption]], 201);
     }
@@ -132,6 +148,9 @@ class AdoptionsController extends Controller
             'status_id' => $cancelledStatus->name,
             'cancellation_date' => date(Carbon::now()->toDateString())
         ]);
+
+        $user = User::findOrFail($adoption->user_id);
+        Mail::to($user->email)->send(new AdoptionMail($pet, $cancelledStatus->name));
 
         return response()->json(['response' => ['message' => 'Adoption cancelled successfully']], 201);
     }
